@@ -24,3 +24,13 @@
     border-bottom: 1px solid #d84315 !important;
     box-shadow: 0 1px 0 0 #d84315  !important;
   }
+
+  .city-Btn {
+    margin-top: 20px;
+
+  }
+
+  #search-label {
+    margin-top: 10px;
+    font-size: medium;
+  }

@@ -14,6 +14,7 @@ $("#searchBtn").on("click", function(event){
     + "&appid=6341109ff59e6a90d44174e154524871" 
     console.log("Button click");
     console.log(citySearch);
+    $("#search-input").val("");
 
 // Weather Ajax call with UV Index call inside
 $.ajax({
@@ -50,15 +51,23 @@ $.ajax({
     method: "GET"
 }).then(function(response){
     console.log(response);
+});
+
+// Creating div for saved search buttons to live
+var savedSearch = $("<div class='saved-search'>");
+
+var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn'>" + citySearch + "</a>");
+
+savedSearch.append(cityBtn);
+
+$(".sidebar").append(savedSearch);
+
+
 
 });
 
-// Add event listern to search button
 
 
-
-
-});
 
 
 
