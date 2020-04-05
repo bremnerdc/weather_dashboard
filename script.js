@@ -1,16 +1,21 @@
 $(document).ready(function() {
 
-// Variable for Ajax calls
-var citySearch = "Seattle"
-var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" 
-+ citySearch 
-+ "&appid=6341109ff59e6a90d44174e154524871"
-var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
-+ citySearch 
-+ "&appid=6341109ff59e6a90d44174e154524871"
+
+// Event listener on search button
+
+$("#searchBtn").on("click", function(event){
+    event.preventDefault();
+    var citySearch = $("#search-input").val();
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" 
+    + citySearch 
+    + "&appid=6341109ff59e6a90d44174e154524871"
+    var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
+    + citySearch 
+    + "&appid=6341109ff59e6a90d44174e154524871" 
+    console.log("Button click");
+    console.log(citySearch);
 
 // Weather Ajax call with UV Index call inside
-
 $.ajax({
     url: queryURL,
     method: "GET"
@@ -33,7 +38,7 @@ $.ajax({
         method: "GET"
       }).then(function(response) {
          var uvIndex = response.value;
-         console.log(uvIndex);   
+         console.log("UV Index: " + uvIndex);   
       });
       
   });
@@ -48,7 +53,12 @@ $.ajax({
 
 });
 
+// Add event listern to search button
 
+
+
+
+});
 
 
 
