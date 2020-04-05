@@ -24,7 +24,9 @@ $.ajax({
       console.log(response);
       var cityName = response.name;
       console.log(cityName)
-      var tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
+    //   var weatherIcon = response.weather[0].icon;
+    //   console.log(weatherIcon);
+      tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
       console.log(tempF);
       var humidity = response.main.humidity;
       console.log(humidity);
@@ -39,7 +41,25 @@ $.ajax({
         method: "GET"
       }).then(function(response) {
          var uvIndex = response.value;
-         console.log("UV Index: " + uvIndex);   
+         console.log("UV Index: " + uvIndex);  
+         var weatherReport = $("<div class='card blue-grey'>");
+    var cityNameEl = $("<span class='card-title'>" + citySearch + " (Today) " + "</span>");
+    var tempEl = $("<p>Temperature: " + tempF + "</p>");
+    var humidityEl = $("<p> Humidity: " + humidity + "</p>");
+    var windSpeedEl = $("<p> Wind Speed: " + windSpeed + "</p>");
+    var uvIndexEl = $("<p> UV Index: " + uvIndex + "</p>");
+    var cardContentDiv = $("<div class='card-content white-text'>");
+
+    weatherReport.append(cardContentDiv);
+    cardContentDiv.append(cityNameEl);
+    cardContentDiv.append(tempEl);
+    cardContentDiv.append(humidityEl);
+    cardContentDiv.append(windSpeedEl);
+    cardContentDiv.append(uvIndexEl);
+
+
+$("#weather-report").append(weatherReport);
+ 
       });
       
   });
@@ -55,18 +75,20 @@ $.ajax({
 
 // Creating div for saved search buttons to live
 var savedSearch = $("<div class='saved-search'>");
-
 var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn'>" + citySearch + "</a>");
-
+cityBtn.attr("data-name", citySearch)
 savedSearch.append(cityBtn);
-
 $(".sidebar").append(savedSearch);
+// NEED TO SAVE TO LOCAL STORAGE
+
+// Adding information to main body div
+
 
 
 
 });
 
-
+// ADD CLICK EVENT FOR SAVED SEARCHES
 
 
 
