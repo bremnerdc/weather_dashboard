@@ -15,12 +15,13 @@ $("#searchBtn").on("click", function(event){
     console.log("Button click");
     console.log(citySearch);
     $("#search-input").val("");
+    $("#weather-report").empty();
 
 // Weather Ajax call with UV Index call inside
 $.ajax({
     url: queryURL,
     method: "GET"
-  }).then(function(response) {
+  }).done(function(response) {
       console.log(response);
       var cityName = response.name;
       console.log(cityName)
@@ -49,7 +50,7 @@ $.ajax({
     var cityNameEl = $("<span class='card-title'>" + citySearch + " (Current weather) " + "</span>");
     var weatherIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherIcon + ".png" + ">");
     var descriptionEl = $("<p>  " + description + "</p>");
-    var tempEl = $("<p>Temperature: " + tempF + "</p>");
+    var tempEl = $("<p>Temperature: " + tempF + "</p><br>");
     var humidityEl = $("<p> Humidity: " + humidity + "</p>");
     var windSpeedEl = $("<p> Wind Speed: " + windSpeed + "</p>");
     var uvIndexEl = $("<p> UV Index: " + uvIndex + "</p>");
@@ -67,7 +68,16 @@ $.ajax({
     $("#weather-report").append(weatherReport);
  
       });
-      
+      // Creating div for saved search buttons to live
+      var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn'>" + citySearch + "</a>");
+      var savedSearch = $("<div class='saved-search'>");
+      savedSearch.append(cityBtn);
+      cityBtn.attr("data-name", citySearch)
+      $(".sidebar").append(savedSearch);
+
+  // If Ajax call fails, throw alert
+  }).fail(function(response){
+    alert("City not found. Please try again.");
   });
 
 //   5 Day forecast Ajax call
@@ -79,12 +89,7 @@ $.ajax({
     console.log(response);
 });
 
-// Creating div for saved search buttons to live
-var savedSearch = $("<div class='saved-search'>");
-var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn'>" + citySearch + "</a>");
-cityBtn.attr("data-name", citySearch)
-savedSearch.append(cityBtn);
-$(".sidebar").append(savedSearch);
+
 // NEED TO SAVE TO LOCAL STORAGE
 
 // Adding information to main body div
