@@ -24,9 +24,11 @@ $.ajax({
       console.log(response);
       var cityName = response.name;
       console.log(cityName)
-    //   var weatherIcon = response.weather[0].icon;
-    //   console.log(weatherIcon);
-      tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
+      var weatherIcon = response.weather[0].icon;
+      console.log(weatherIcon);
+      var description = response.weather[0].description;
+      console.log("DESCRIPTION" + description);
+      var tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
       console.log(tempF);
       var humidity = response.main.humidity;
       console.log(humidity);
@@ -43,7 +45,10 @@ $.ajax({
          var uvIndex = response.value;
          console.log("UV Index: " + uvIndex);  
          var weatherReport = $("<div class='card blue-grey'>");
-    var cityNameEl = $("<span class='card-title'>" + citySearch + " (Today) " + "</span>");
+    
+    var cityNameEl = $("<span class='card-title'>" + citySearch + " (Current weather) " + "</span>");
+    var weatherIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherIcon + ".png" + ">");
+    var descriptionEl = $("<p>  " + description + "</p>");
     var tempEl = $("<p>Temperature: " + tempF + "</p>");
     var humidityEl = $("<p> Humidity: " + humidity + "</p>");
     var windSpeedEl = $("<p> Wind Speed: " + windSpeed + "</p>");
@@ -52,13 +57,14 @@ $.ajax({
 
     weatherReport.append(cardContentDiv);
     cardContentDiv.append(cityNameEl);
+    cardContentDiv.append(descriptionEl);
+    cardContentDiv.append(weatherIconEl);
     cardContentDiv.append(tempEl);
     cardContentDiv.append(humidityEl);
     cardContentDiv.append(windSpeedEl);
     cardContentDiv.append(uvIndexEl);
 
-
-$("#weather-report").append(weatherReport);
+    $("#weather-report").append(weatherReport);
  
       });
       
