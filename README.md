@@ -7,8 +7,6 @@ A simple weather dashboard using OpenWeather APIs
 
 * add 5 day forecast
 
-* add percetnages and such to weather report
-
 * Fix saved search button CSS
 
 * Add saved search button functionality
