@@ -1,6 +1,5 @@
 .sidebar {
     margin-top: 20px;
-    margin-left: 20px;
     
 }
 
@@ -36,6 +35,10 @@
   }
 
   #weather-report {
+    margin-left: 20px;
+  }
+
+  #forecast {
     margin-left: 20px;
   }
 

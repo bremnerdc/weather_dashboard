@@ -12,7 +12,6 @@ $("#searchBtn").on("click", function(event){
     var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
     + citySearch 
     + "&appid=6341109ff59e6a90d44174e154524871" 
-    // console.log(citySearch);
     $("#search-input").val("");
     $("#weather-report").empty();
 
@@ -22,22 +21,17 @@ $.ajax({
     method: "GET"
   }).done(function(response) {
       console.log(response);
-      var cityName = response.name;
-      // console.log(cityName)
       var weatherIcon = response.weather[0].icon;
-      // console.log(weatherIcon);
       var description = response.weather[0].description;
-      // console.log("DESCRIPTION" + description);
       var tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
-      // console.log(tempF);
       var humidity = response.main.humidity;
-      // console.log(humidity);
       var windSpeed = response.wind.speed;
-      // console.log(windSpeed);
       var lon = response.coord.lon;
       var lat = response.coord.lat;
       var uvQueryURL = "https://api.openweathermap.org/data/2.5/uvi?appid=6341109ff59e6a90d44174e154524871&lat=" 
       + lat + "&lon=" + lon;
+
+      // UV Index Ajax call
       $.ajax({
         url: uvQueryURL,
         method: "GET"
@@ -60,35 +54,35 @@ $.ajax({
         } else {
           $(uvIndex).addClass("purple")};
 
-    // Creating button for UV Index
+      // Creating button for UV Index
       $(uvIndex).on("click", function(event){
        window.open("https://www.wikipedia.org/wiki/Ultraviolet_index")
       });
     
-    // Creating weather report div elements
-    var weatherReport = $("<div class='card blue-grey'>");
-    var cityNameEl = $("<span class='card-title'>" + citySearch + " (Current weather) " + "</span>");
-    var weatherIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherIcon + ".png" + ">");
-    var descriptionEl = $("<p>  " + description + "</p>");
-    var tempEl = $("<p>Temperature: " + tempF + "°F" + "</p><br>");
-    var humidityEl = $("<p> Humidity: " + humidity + "%" + "</p><br>");
-    var windSpeedEl = $("<p> Wind Speed: " + windSpeed + " m/s" + "</p><br>");
-    var uvIndexEl = $("<p> UV Index: </p>");
-    var cardContentDiv = $("<div class='card-content white-text'>");
+      // Creating weather report div elements
+      var weatherReport = $("<div class='card blue-grey'>");
+      var cityNameEl = $("<span class='card-title'>" + citySearch + " (Current weather) " + "</span>");
+      var weatherIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherIcon + ".png" + ">");
+      var descriptionEl = $("<p>  " + description + "</p>");
+      var tempEl = $("<p>Temperature: " + tempF + "°F" + "</p><br>");
+      var humidityEl = $("<p> Humidity: " + humidity + "%" + "</p><br>");
+      var windSpeedEl = $("<p> Wind Speed: " + windSpeed + " m/s" + "</p><br>");
+      var uvIndexEl = $("<p> UV Index: </p>");
+      var cardContentDiv = $("<div class='card-content white-text'>");
 
-    // Appending them to the weather report div space
+      // Appending them to the weather report div space
 
-    weatherReport.append(cardContentDiv);
-    cardContentDiv.append(cityNameEl);
-    cardContentDiv.append(descriptionEl);
-    cardContentDiv.append(weatherIconEl);
-    cardContentDiv.append(tempEl);
-    cardContentDiv.append(humidityEl);
-    cardContentDiv.append(windSpeedEl);
-    uvIndexEl.append(uvIndex);
-    cardContentDiv.append(uvIndexEl);
+      weatherReport.append(cardContentDiv);
+      cardContentDiv.append(cityNameEl);
+      cardContentDiv.append(descriptionEl);
+      cardContentDiv.append(weatherIconEl);
+      cardContentDiv.append(tempEl);
+      cardContentDiv.append(humidityEl);
+      cardContentDiv.append(windSpeedEl);
+      uvIndexEl.append(uvIndex);
+      cardContentDiv.append(uvIndexEl);
 
-    $("#weather-report").append(weatherReport);
+      $("#weather-report").append(weatherReport);
  
       });
       // Creating div for saved search buttons to live
@@ -98,26 +92,56 @@ $.ajax({
       cityBtn.attr("data-name", citySearch)
       $(".sidebar").append(savedSearch);
 
-  // If Ajax call fails, throw alert
-  }).fail(function(response){
+    // Forecast Ajax query
+    $.ajax({
+    url: forecastQueryURL,
+    method: "GET"
+    }).then(function(response){
+    console.log(response);
+    for (i=0; i<5; i++){
+    // Variables for Forecast 
+    // var forecastDate; --- Moment.js
+    var weatherForecastIcon = response.list[i].weather[0].icon;
+    var descriptionForecast = response.list[i].weather[0].description;
+    var tempForecast = ((response.list[i].main.temp - 273.15) * 1.80 + 32).toFixed(0);
+    var humidityForecast = response.list[i].main.humidity;
+
+    // Creating Forecast HTML elements
+    var forecastColDiv = $("<div class='col s12 m5 l2'></div>");
+    var forecastDiv = $("<div class='card-panel blue-grey'></div>");
+    // PUT FORECAST DATE IN HERE
+    var weatherForecastIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherForecastIcon + ".png" + ">");
+    var descriptionForecastEl = $("<p>  " + descriptionForecast + "</p><br>");
+    var tempForecastEl = $("<p>Temperature: " + tempForecast + "°F" + "</p><br>");
+    var humidityForecastEl = $("<p> Humidity: " + humidityForecast + "%" + "</p><br>");
+    var forecastContentDiv = $("<span class='card-content white-text'></span>");
+
+    // Appending forecast elements to the HTML
+    forecastDiv.append(forecastContentDiv);
+    forecastColDiv.append(forecastDiv);
+    // APPEND FORECAST DATE HERE
+    forecastContentDiv.append(weatherForecastIconEl);
+    forecastContentDiv.append(descriptionForecastEl);
+    forecastContentDiv.append(tempForecastEl);
+    forecastContentDiv.append(humidityForecastEl);
+    $("#forecast").append(forecastColDiv);
+
+
+    }
+
+    });
+
+      // If Ajax call fails, throw alert
+    }).fail(function(response){
     alert("City not found. Please try again.");
   });
 
-//   5 Day forecast Ajax call
 
-$.ajax({
-    url: forecastQueryURL,
-    method: "GET"
-}).then(function(response){
-    // console.log(response);
-});
 
 
 
 
 // NEED TO SAVE TO LOCAL STORAGE
-
-// Adding information to main body div
 
 
 
