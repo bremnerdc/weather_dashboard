@@ -1,8 +1,6 @@
 $(document).ready(function() {
 
-
 // Event listener on search button
-
 $("#searchBtn").on("click", function(event){
     event.preventDefault();
     var citySearch = $("#search-input").val();
@@ -13,6 +11,7 @@ $("#searchBtn").on("click", function(event){
     + citySearch 
     + "&appid=6341109ff59e6a90d44174e154524871" 
     $("#search-input").val("");
+    $("#forecast").empty();
     $("#weather-report").empty();
 
 // Weather Ajax call with UV Index call inside
@@ -58,10 +57,13 @@ $.ajax({
       $(uvIndex).on("click", function(event){
        window.open("https://www.wikipedia.org/wiki/Ultraviolet_index")
       });
-    
+      
+      // Grabbing current date
+      var currentDate = moment().format('dddd MMMM Do');
+
       // Creating weather report div elements
       var weatherReport = $("<div class='card blue-grey'>");
-      var cityNameEl = $("<span class='card-title'>" + citySearch + " (Current weather) " + "</span>");
+      var cityNameEl = $("<span class='card-title'>" + citySearch + " -  " + currentDate + "</span>");
       var weatherIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherIcon + ".png" + ">");
       var descriptionEl = $("<p>  " + description + "</p>");
       var tempEl = $("<p>Temperature: " + tempF + "°F" + "</p><br>");
@@ -98,9 +100,13 @@ $.ajax({
     method: "GET"
     }).then(function(response){
     console.log(response);
+    $("#forecast").append("<h4 id='five-day-forecast'>5-Day Forecast: </h4>")
     for (i=0; i<5; i++){
     // Variables for Forecast 
-    // var forecastDate; --- Moment.js
+    var forecastDate = moment().add((i+1), 'days').format('dddd');
+    // var displayForecast = moment(forecastDate, 'ddd MMM D YYYY HH:mm:ss ZZ').format('MM/DD');
+    console.log(forecastDate);
+    // var forecastDateFormat = forecastDate.format('dddd');
     var weatherForecastIcon = response.list[i].weather[0].icon;
     var descriptionForecast = response.list[i].weather[0].description;
     var tempForecast = ((response.list[i].main.temp - 273.15) * 1.80 + 32).toFixed(0);
@@ -109,7 +115,7 @@ $.ajax({
     // Creating Forecast HTML elements
     var forecastColDiv = $("<div class='col s12 m5 l2'></div>");
     var forecastDiv = $("<div class='card-panel blue-grey'></div>");
-    // PUT FORECAST DATE IN HERE
+    var forecastDateEl = $("<h5 id='forecast-header'>" + forecastDate + "</h5>");
     var weatherForecastIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherForecastIcon + ".png" + ">");
     var descriptionForecastEl = $("<p>  " + descriptionForecast + "</p><br>");
     var tempForecastEl = $("<p>Temperature: " + tempForecast + "°F" + "</p><br>");
@@ -119,7 +125,7 @@ $.ajax({
     // Appending forecast elements to the HTML
     forecastDiv.append(forecastContentDiv);
     forecastColDiv.append(forecastDiv);
-    // APPEND FORECAST DATE HERE
+    forecastContentDiv.append(forecastDateEl);
     forecastContentDiv.append(weatherForecastIconEl);
     forecastContentDiv.append(descriptionForecastEl);
     forecastContentDiv.append(tempForecastEl);
