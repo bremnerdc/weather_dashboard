@@ -3,7 +3,7 @@ A simple weather dashboard using OpenWeather APIs
 
 ## To Do
 
-* Add saved search button functionality
+* Figure out how to get saved search buttons to not repeat themselves
 
 * add saved search button being saved to local storage
 

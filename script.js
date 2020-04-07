@@ -1,21 +1,19 @@
 $(document).ready(function() {
 
-// Event listener on search button
+// Event listener and function on main search button
 $("#searchBtn").on("click", function (event) {
   event.preventDefault();
   var location = $("#search-input").val();
   queryWeather(location);
 });
 
-
-// Saved search location function
+// Saved search location event listener and function
 $(".sidebar").on("click", ".city-Btn", function (event) {
   event.preventDefault();
   var location;
   location = $(this).attr("data-name");
   queryWeather(location);
 });
-
 
 // Main query function
 function queryWeather(location){
@@ -86,7 +84,6 @@ $.ajax({
       var cardContentDiv = $("<div class='card-content white-text'>");
 
       // Appending them to the weather report div space
-
       weatherReport.append(cardContentDiv);
       cardContentDiv.append(cityNameEl);
       cardContentDiv.append(descriptionEl);
@@ -96,9 +93,7 @@ $.ajax({
       cardContentDiv.append(windSpeedEl);
       uvIndexEl.append(uvIndex);
       cardContentDiv.append(uvIndexEl);
-
       $("#weather-report").append(weatherReport);
- 
       });
 
       // Creating div for saved search buttons to live
@@ -142,33 +137,18 @@ $.ajax({
     forecastContentDiv.append(tempForecastEl);
     forecastContentDiv.append(humidityForecastEl);
     $("#forecast").append(forecastColDiv);
-
-
     }
 
-    });
+  });
 
-      // If Ajax call fails, throw alert
+    // If Ajax call fails, throw alert
     }).fail(function(response){
     alert("City not found. Please try again.");
   });
 
-
-
-
-
-
 // NEED TO SAVE TO LOCAL STORAGE
 
-
-
-
 };
-
-// Saved search buttons query
-
-
-
 
 
 });
