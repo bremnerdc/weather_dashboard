@@ -16,11 +16,6 @@ A simple weather dashboard using OpenWeather APIs
 
 ## Done
 
-* Empty 5-day Forecast Div (in the same spot as the other clearing?)
-
-* Add Header saying "5-Day Forecast" 
-
-* Moment.js for dates in weather and forecast
 
 
 

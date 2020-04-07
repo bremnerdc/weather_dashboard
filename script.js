@@ -1,14 +1,29 @@
 $(document).ready(function() {
 
 // Event listener on search button
-$("#searchBtn").on("click", function(event){
-    event.preventDefault();
-    var citySearch = $("#search-input").val();
+$("#searchBtn").on("click", function (event) {
+  event.preventDefault();
+  var location = $("#search-input").val();
+  queryWeather(location);
+});
+
+
+// Saved search location function
+$(".sidebar").on("click", ".city-Btn", function (event) {
+  event.preventDefault();
+  var location;
+  location = $(this).attr("data-name");
+  queryWeather(location);
+});
+
+
+// Main query function
+function queryWeather(location){
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" 
-    + citySearch 
+    + location 
     + "&appid=6341109ff59e6a90d44174e154524871"
     var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
-    + citySearch 
+    + location 
     + "&appid=6341109ff59e6a90d44174e154524871" 
     $("#search-input").val("");
     $("#forecast").empty();
@@ -19,7 +34,6 @@ $.ajax({
     url: queryURL,
     method: "GET"
   }).done(function(response) {
-      console.log(response);
       var weatherIcon = response.weather[0].icon;
       var description = response.weather[0].description;
       var tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
@@ -35,7 +49,6 @@ $.ajax({
         url: uvQueryURL,
         method: "GET"
       }).then(function(response) {
-        console.log(response);
          var uvIndex = $("<button id='uv-index'>" + response.value + "</button>");
         
         // If statement for UV Index button color
@@ -63,7 +76,7 @@ $.ajax({
 
       // Creating weather report div elements
       var weatherReport = $("<div class='card blue-grey'>");
-      var cityNameEl = $("<span class='card-title'>" + citySearch + " -  " + currentDate + "</span>");
+      var cityNameEl = $("<span class='card-title'>" + location + " -  " + currentDate + "</span>");
       var weatherIconEl = $("<img src=http://openweathermap.org/img/w/" + weatherIcon + ".png" + ">");
       var descriptionEl = $("<p>  " + description + "</p>");
       var tempEl = $("<p>Temperature: " + tempF + "°F" + "</p><br>");
@@ -87,11 +100,12 @@ $.ajax({
       $("#weather-report").append(weatherReport);
  
       });
+
       // Creating div for saved search buttons to live
-      var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn'>" + citySearch + "</a>");
+      var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn''id=testID'>" + location + "</a>");
       var savedSearch = $("<div class='saved-search'>");
       savedSearch.append(cityBtn);
-      cityBtn.attr("data-name", citySearch)
+      cityBtn.attr("data-name", location)
       $(".sidebar").append(savedSearch);
 
     // Forecast Ajax query
@@ -99,14 +113,11 @@ $.ajax({
     url: forecastQueryURL,
     method: "GET"
     }).then(function(response){
-    console.log(response);
     $("#forecast").append("<h4 id='five-day-forecast'>5-Day Forecast: </h4>")
     for (i=0; i<5; i++){
+      
     // Variables for Forecast 
     var forecastDate = moment().add((i+1), 'days').format('dddd');
-    // var displayForecast = moment(forecastDate, 'ddd MMM D YYYY HH:mm:ss ZZ').format('MM/DD');
-    console.log(forecastDate);
-    // var forecastDateFormat = forecastDate.format('dddd');
     var weatherForecastIcon = response.list[i].weather[0].icon;
     var descriptionForecast = response.list[i].weather[0].description;
     var tempForecast = ((response.list[i].main.temp - 273.15) * 1.80 + 32).toFixed(0);
@@ -152,9 +163,10 @@ $.ajax({
 
 
 
-});
+};
 
-// ADD CLICK EVENT FOR SAVED SEARCHES
+// Saved search buttons query
+
 
 
 
