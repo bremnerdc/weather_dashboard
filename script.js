@@ -1,5 +1,32 @@
 $(document).ready(function() {
 
+// Empty array for saved search items to use in localStorage
+var savedSearchArray = [];
+
+// localStorage.clear();
+
+// Call and desclare function that updates savedSearchArray based off localStorage
+updateSSArray();
+function updateSSArray() {
+ var storedSSArray = JSON.parse(localStorage.getItem("searches"));
+ if (storedSSArray !== null) {
+  savedSearchArray = storedSSArray;
+  }
+  renderSSButtons();
+
+};
+
+// Render saved search buttons to the screen based of array
+function renderSSButtons() {
+  for (i=0; i<savedSearchArray.length; i++){
+  var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn''id=testID'>" + savedSearchArray[i] + "</a>");
+  var savedSearch = $("<div class='saved-search'>");
+  savedSearch.append(cityBtn);
+  cityBtn.attr("data-name", savedSearchArray[i]);
+  $(".sidebar").append(savedSearch);
+  }
+};
+
 // Event listener and function on main search button
 $("#searchBtn").on("click", function (event) {
   event.preventDefault();
@@ -12,6 +39,11 @@ $("#searchBtn").on("click", function (event) {
   savedSearch.append(cityBtn);
   cityBtn.attr("data-name", location)
   $(".sidebar").append(savedSearch);
+
+  // Saving location to savedSearchArry and then to localStorage
+  savedSearchArray.push(location);
+  localStorage.setItem("searches", JSON.stringify(savedSearchArray));
+  console.log(savedSearchArray);
 });
 
 // Saved search location event listener and function
@@ -144,6 +176,11 @@ $.ajax({
     // If Ajax call fails, throw alert
     }).fail(function(response){
     alert("City not found. Please try again.");
+    
+    // Get rid of last saved search button if ajax fails
+    $(".saved-search").last().empty();
+
+    
   });
 
 // NEED TO SAVE TO LOCAL STORAGE
