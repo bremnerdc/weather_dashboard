@@ -5,6 +5,13 @@ $("#searchBtn").on("click", function (event) {
   event.preventDefault();
   var location = $("#search-input").val();
   queryWeather(location);
+  
+  // Creating div for saved search buttons to live
+  var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn''id=testID'>" + location + "</a>");
+  var savedSearch = $("<div class='saved-search'>");
+  savedSearch.append(cityBtn);
+  cityBtn.attr("data-name", location)
+  $(".sidebar").append(savedSearch);
 });
 
 // Saved search location event listener and function
@@ -95,13 +102,6 @@ $.ajax({
       cardContentDiv.append(uvIndexEl);
       $("#weather-report").append(weatherReport);
       });
-
-      // Creating div for saved search buttons to live
-      var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn''id=testID'>" + location + "</a>");
-      var savedSearch = $("<div class='saved-search'>");
-      savedSearch.append(cityBtn);
-      cityBtn.attr("data-name", location)
-      $(".sidebar").append(savedSearch);
 
     // Forecast Ajax query
     $.ajax({
