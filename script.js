@@ -2,6 +2,7 @@ $(document).ready(function() {
 
 // Empty array for saved search items to use in localStorage
 var savedSearchArray = [];
+var finalArray = [];
 
 // localStorage.clear();
 
@@ -11,18 +12,22 @@ function updateSSArray() {
  var storedSSArray = JSON.parse(localStorage.getItem("searches"));
  if (storedSSArray !== null) {
   savedSearchArray = storedSSArray;
+  // Make sure what renders on screen ignores repeated cities
+  var uniqueArray = new Set(savedSearchArray);
+  finalArray = [...uniqueArray];
   }
+  
   renderSSButtons();
 
 };
 
 // Render saved search buttons to the screen based of array
 function renderSSButtons() {
-  for (i=0; i<savedSearchArray.length; i++){
+  for (i=0; i<finalArray.length; i++){
   var cityBtn = $("<a class='waves-effect waves-light btn-large deep-orange darken-3 city-Btn''id=testID'>" + savedSearchArray[i] + "</a>");
   var savedSearch = $("<div class='saved-search'>");
   savedSearch.append(cityBtn);
-  cityBtn.attr("data-name", savedSearchArray[i]);
+  cityBtn.attr("data-name", finalArray[i]);
   $(".sidebar").append(savedSearch);
   }
 };
@@ -40,10 +45,6 @@ $("#searchBtn").on("click", function (event) {
   cityBtn.attr("data-name", location)
   $(".sidebar").append(savedSearch);
 
-  // Saving location to savedSearchArry and then to localStorage
-  savedSearchArray.push(location);
-  localStorage.setItem("searches", JSON.stringify(savedSearchArray));
-  console.log(savedSearchArray);
 });
 
 // Saved search location event listener and function
@@ -70,7 +71,19 @@ function queryWeather(location){
 $.ajax({
     url: queryURL,
     method: "GET"
+    // If Ajax call fails, throw alert
+  }).fail(function(response){
+    alert("City not found. Please try again.");
+    
+    // Get rid of last saved search button if ajax fails
+    $(".saved-search").last().empty();
+
   }).done(function(response) {
+
+      // Saving location to savedSearchArry and then to localStorage only if Ajax call is successful
+      savedSearchArray.push(location);
+      localStorage.setItem("searches", JSON.stringify(savedSearchArray));
+
       var weatherIcon = response.weather[0].icon;
       var description = response.weather[0].description;
       var tempF = ((response.main.temp - 273.15) * 1.80 + 32).toFixed(0);
@@ -173,17 +186,9 @@ $.ajax({
 
   });
 
-    // If Ajax call fails, throw alert
-    }).fail(function(response){
-    alert("City not found. Please try again.");
     
-    // Get rid of last saved search button if ajax fails
-    $(".saved-search").last().empty();
 
-    
   });
-
-// NEED TO SAVE TO LOCAL STORAGE
 
 };
 
