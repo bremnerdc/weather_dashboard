@@ -1,10 +1,39 @@
 $(document).ready(function() {
 
+// localStorage.clear();
+
+// Checking user location first thing
+getLocation();
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    return;
+  }
+};
+
+// Take lat/lon and create a query URL based off of them
+function showPosition(position) {
+  var lat = position.coords.latitude;
+  var lon = position.coords.longitude;
+  var locQueryURL = "https://api.openweathermap.org/data/2.5/weather?appid=6341109ff59e6a90d44174e154524871&lat=" 
+  + lat + "&lon=" + lon;
+
+// Ajax call to get city name from lat/lon 
+  $.ajax({
+    url: locQueryURL,
+    method: "GET"
+  }).then(function(response) {
+    var location = response.name;
+  // Run query based of given location
+    queryWeather(location);
+  });
+
+};
+
 // Empty array for saved search items to use in localStorage
 var savedSearchArray = [];
 var finalArray = [];
-
-// localStorage.clear();
 
 // Call and desclare function that updates savedSearchArray based off localStorage
 updateSSArray();
